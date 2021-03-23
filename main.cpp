@@ -3,7 +3,7 @@
 #include "sudoku.h"
 #include "Grid.h"
 
-#include <QApplication>
+#include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +15,12 @@ int main(int argc, char *argv[])
     while(!grid.init_sudoku())
            grid.reset_grid();
     //grid.display_grid();
+
+    if(grid.check_sudoku() == false)
+    {
+        std::cout << "VIRHEELLINEN SUDOKU" << std::endl;
+    }
+
     grid.erase_random_values_from_grid();
 
     //Init sudoku GUI

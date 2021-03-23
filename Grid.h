@@ -1,13 +1,13 @@
 #ifndef _GRID_H_
 #define _GRID_H_
 
-#include "ui_sudoku.h"
-
 #include <iostream>
 #include <array>
 #include <cstdlib>
 #include <ctime>
 #include <string>
+
+#include "ui_sudoku.h"
 
 #define EMPTY ' '
 #define GRID_SIZE 9
@@ -35,6 +35,8 @@ class Grid {
         Grid();
         ~Grid() = default;
 
+        bool check_sudoku();
+
         //GETTERS AND SETTERS
         static int get_track_number_counter() {return track_number_counter;}
         char get_grid_value(const Coor &coordinates) const;
@@ -54,13 +56,15 @@ class Grid {
         void copy_values_to_grid(std::array<std::array<QPushButton*, GRID_SIZE>, GRID_SIZE> &src);
 
         int check_if_value_exists(const char number, Coor current_location);
-        bool scan_row(const char number, Coor &current_location);
-        bool scan_column(const char number, Coor &current_location);
-        bool scan_section(const char number, const Coor &section_begin, const Coor &current_location);
+        bool scan_row(const char number, Coor current_location);
+        bool scan_column(const char number, Coor current_location);
+        bool scan_section(const char number, const Coor section_begin, const Coor current_location);
 
-        Coor find_section(const Coor &current_location);
+        Coor find_section(const Coor current_location);
         bool replace_values(char number, Coor current_location);
-        bool swap_values_from_current_row(char &number, Coor &current_location);
+        bool swap_values_from_current_row(char number, Coor current_location);
+
+        void add_number_to_grid(char &number, const Coor current_location);
         
         void shuffle(std::array<char, GRID_SIZE> &row);
         bool loop_through_until_not_zero(size_t &cur_index, const std::array<char, GRID_SIZE> &row);
@@ -72,10 +76,11 @@ class Grid {
         void display_grid() const;
 
         //Track number functions
-        void track_number(char number, Coor current_location);
+        void track_number(char &number, Coor &current_location);
         bool track_column(char &number, Coor &current_location);
         bool track_row(char &number, Coor &current_location);
         bool track_section(char &number, const Coor &section_begin, Coor &current_location);
 };
 
 #endif
+

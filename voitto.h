@@ -1,7 +1,7 @@
 #ifndef VOITTO_H
 #define VOITTO_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
 class Voitto;

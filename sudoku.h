@@ -1,7 +1,7 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
 
-#include <QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include <QEvent>
 #include <QKeyEvent>
 #include "Grid.h"

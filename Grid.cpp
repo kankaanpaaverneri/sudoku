@@ -11,6 +11,20 @@ Grid::Grid() {
     }
 }
 
+bool Grid::check_sudoku()
+{
+    for(size_t i = 0; i < GRID_SIZE; i++)
+    {
+        for(size_t j = 0; j < GRID_SIZE; j++)
+        {
+            Coor cur_location = init_coordinates(j, i);
+            if(check_if_value_exists(grid.at(i).at(j), cur_location) != Status::NOT_FOUND)
+                return false;
+        }
+    }
+    return true;
+}
+
 char Grid::get_grid_value(const Coor &coordinates) const
 {
     return grid.at(coordinates.y).at(coordinates.x);
@@ -39,6 +53,7 @@ bool Grid::init_sudoku()
                 //Adds the value to the grid and replaces the corresponding value in the row to 0.
                 grid.at(i).at(j) = row.at(row_index);
                 row.at(row_index) = '0';
+                //display_grid();
                 fail_counter = 0;
             }
             else
@@ -56,7 +71,6 @@ bool Grid::init_sudoku()
                     return false;
                 else
                     grid.at(current_location.y).at(current_location.x) = row.at(row_index);
-                j++;
             }
         }
     }
@@ -152,7 +166,7 @@ int Grid::check_if_value_exists(const char number, Coor current_location)
     return Status::NOT_FOUND;
 }
 
-bool Grid::scan_row(const char number, Coor &current_location)
+bool Grid::scan_row(const char number, Coor current_location)
 {
     for(int j = 0; j < GRID_SIZE; j++)
     {
@@ -164,7 +178,7 @@ bool Grid::scan_row(const char number, Coor &current_location)
     return false;
 }
 
-bool Grid::scan_column(const char number, Coor &current_location)
+bool Grid::scan_column(const char number, Coor current_location)
 {
     for(int i = 0; i < GRID_SIZE; i++)
     {
@@ -176,7 +190,7 @@ bool Grid::scan_column(const char number, Coor &current_location)
     return false;
 }
 
-bool Grid::scan_section(const char number, const Coor &section_begin, const Coor &current_location)
+bool Grid::scan_section(const char number, const Coor section_begin, const Coor current_location)
 {
     for(int i = section_begin.y; i < section_begin.y + Status::SECTION; i++)
     {
@@ -194,7 +208,7 @@ bool Grid::scan_section(const char number, const Coor &section_begin, const Coor
     return false;
 }
 
-Coor Grid::find_section(const Coor &current_location)
+Coor Grid::find_section(const Coor current_location)
 {
     Coor section_begin = init_coordinates(0, 0);
     int i {0}, j {0};
@@ -230,13 +244,14 @@ bool Grid::replace_values(char number, Coor current_location)
         //If we tried to replace every value in the current row.
         //We start to track the numbers one by one in the grid and replacing them recursively.
         track_number(number, current_location);
-        if(get_track_number_counter() == MAX_TRACK_NUMBER_CALLS)
+        if(get_track_number_counter() == MAX_TRACK_NUMBER_CALLS) {
             return false;
+        }
     }
     return true;
 }
 
-bool Grid::swap_values_from_current_row(char &number, Coor &current_location) {
+bool Grid::swap_values_from_current_row(char number, Coor current_location) {
 
     for(int j {0}; j < current_location.x; j++)
     {
@@ -333,11 +348,12 @@ void Grid::display_grid() const
 
 /*
 Recursive loop that scans the section, column and the row and tries to find an equal number.
-If equal number is found it will replace the number and then function will be called again
+If equal number is found the it will replace the number and then function will be called again
 for scaning the replaced number.
 */
-void Grid::track_number(char number, Coor current_location) // Parameters are the value to look for and a location from to look for.
+void Grid::track_number(char &number, Coor &current_location) // Parameters are the value to look for and a location from to look for.
 {
+    //std::cout << "Track number called: " << get_track_number_counter() << std::endl;
     if(get_track_number_counter() >= MAX_TRACK_NUMBER_CALLS)
     {
         return;
@@ -407,7 +423,7 @@ bool Grid::track_column(char &number, Coor &current_location)
         }
     }
     size_t index {0};
-    //loop_through(index, useable_values);
+    loop_through_until_not_zero(index, useable_values);
     while(useable_values.at(index) == '0')
     {
         index = rand() % GRID_SIZE;
@@ -442,6 +458,7 @@ bool Grid::track_row(char &number, Coor &current_location)
         }
     }
     size_t index {0};
+    loop_through_until_not_zero(index, useable_values);
 
     while(useable_values.at(index) == '0')
     {
@@ -495,6 +512,7 @@ bool Grid::track_section(char &number, const Coor &section_begin, Coor &current_
             break;
     }
     index = 0;
+    loop_through_until_not_zero(index, useable_values);
 
     while(useable_values.at(index) == '0')
     {
