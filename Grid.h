@@ -61,8 +61,8 @@ class Grid {
         bool scan_section(const char number, const Coor section_begin, const Coor current_location);
 
         Coor find_section(const Coor current_location);
-        bool replace_values(char number, Coor current_location);
-        bool swap_values_from_current_row(char number, Coor current_location);
+        bool replace_values(char &number, Coor &current_location);
+        bool swap_values_from_current_row(char &number, Coor &current_location);
 
         void add_number_to_grid(char &number, const Coor current_location);
         
@@ -77,9 +77,9 @@ class Grid {
 
         //Track number functions
         void track_number(char &number, Coor &current_location);
-        bool track_column(char &number, Coor &current_location);
-        bool track_row(char &number, Coor &current_location);
-        bool track_section(char &number, const Coor &section_begin, Coor &current_location);
+        void track_column(char &number, Coor &current_location);
+        void track_row(char &number, Coor &current_location);
+        void track_section(char &number, const Coor &section_begin, Coor &current_location);
 };
 
 #endif

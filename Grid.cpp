@@ -237,7 +237,7 @@ Coor Grid::find_section(const Coor current_location)
     return section_begin;
 }
 
-bool Grid::replace_values(char number, Coor current_location)
+bool Grid::replace_values(char &number, Coor &current_location)
 {
     if(!swap_values_from_current_row(number, current_location))
     {
@@ -251,7 +251,7 @@ bool Grid::replace_values(char number, Coor current_location)
     return true;
 }
 
-bool Grid::swap_values_from_current_row(char number, Coor current_location) {
+bool Grid::swap_values_from_current_row(char &number, Coor &current_location) {
 
     for(int j {0}; j < current_location.x; j++)
     {
@@ -353,7 +353,8 @@ for scaning the replaced number.
 */
 void Grid::track_number(char &number, Coor &current_location) // Parameters are the value to look for and a location from to look for.
 {
-    //std::cout << "Track number called: " << get_track_number_counter() << std::endl;
+    std::cout << "Track number called: " << get_track_number_counter() << std::endl;
+    //display_grid();
     if(get_track_number_counter() >= MAX_TRACK_NUMBER_CALLS)
     {
         return;
@@ -397,7 +398,7 @@ void Grid::track_number(char &number, Coor &current_location) // Parameters are 
     }
 }
 
-bool Grid::track_column(char &number, Coor &current_location)
+void Grid::track_column(char &number, Coor &current_location)
 {
     //initializes useable_values array
     std::array<char, GRID_SIZE> useable_values;
@@ -423,7 +424,7 @@ bool Grid::track_column(char &number, Coor &current_location)
         }
     }
     size_t index {0};
-    loop_through_until_not_zero(index, useable_values);
+    //loop_through_until_not_zero(index, useable_values);
     while(useable_values.at(index) == '0')
     {
         index = rand() % GRID_SIZE;
@@ -431,10 +432,9 @@ bool Grid::track_column(char &number, Coor &current_location)
     
     grid.at(current_location.y).at(current_location.x) = useable_values.at(index);
     number = grid.at(current_location.y).at(current_location.x);
-    return true;
 }
 
-bool Grid::track_row(char &number, Coor &current_location)
+void Grid::track_row(char &number, Coor &current_location)
 {
     //intializes useable_values
     std::array<char, GRID_SIZE> useable_values;
@@ -458,7 +458,7 @@ bool Grid::track_row(char &number, Coor &current_location)
         }
     }
     size_t index {0};
-    loop_through_until_not_zero(index, useable_values);
+    //loop_through_until_not_zero(index, useable_values);
 
     while(useable_values.at(index) == '0')
     {
@@ -467,10 +467,9 @@ bool Grid::track_row(char &number, Coor &current_location)
 
     grid.at(current_location.y).at(current_location.x) = useable_values.at(index);
     number = grid.at(current_location.y).at(current_location.x);
-    return true;
 }
 
-bool Grid::track_section(char &number, const Coor &section_begin, Coor &current_location)
+void Grid::track_section(char &number, const Coor &section_begin, Coor &current_location)
 {
     //initializes useable_values array
     std::array<char, GRID_SIZE> useable_values;
@@ -492,7 +491,7 @@ bool Grid::track_section(char &number, const Coor &section_begin, Coor &current_
         }
     }
 
-    //Changes the current_location cordinates
+    //Changes the current_location coordinates
     for(int i {section_begin.y}; i < section_begin.y + Status::SECTION; i++)
     {
         bool exit_loop {false};
@@ -512,7 +511,7 @@ bool Grid::track_section(char &number, const Coor &section_begin, Coor &current_
             break;
     }
     index = 0;
-    loop_through_until_not_zero(index, useable_values);
+    //loop_through_until_not_zero(index, useable_values);
 
     while(useable_values.at(index) == '0')
     {
@@ -521,5 +520,4 @@ bool Grid::track_section(char &number, const Coor &section_begin, Coor &current_
 
     grid.at(current_location.y).at(current_location.x) = useable_values.at(index);
     number = grid.at(current_location.y).at(current_location.x);
-    return true;
 }
